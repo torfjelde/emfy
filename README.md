@@ -807,29 +807,28 @@ lines at the end of the file.
     spaces can be removed with the key sequence `M-x
     delete-trailing-whitespace RET`.
 
-  - Show non-existent lines with a special glyph in the left fringe:
+  - Show the end of buffer with a special glyph in the left fringe:
 
     ```elisp
     (setq-default indicate-empty-lines t)
     ```
 
-    Showing non-existent lines in a conspicuous manner like this can
-    be helpful to spot any unnecessary empty lines at the end of a
-    buffer. An empty line is one that does not contain any character
-    except the terminating newline itself. Here is a screenshot that
-    demonstrates this feature:
+    Showing the end of the buffer conspicuously can be helpful to spot
+    any unnecessary blank lines at the end of a buffer. A blank line
+    is one that does not contain any character except the terminating
+    newline itself. Here is a screenshot that demonstrates this
+    feature:
 
     <!-- lorem2 -->
     <a href="https://i.imgur.com/WzystxA.png"><img alt="Non-existent line indicators"
         src="https://i.imgur.com/WzystxA.png" width="580"></a>
 
-    The screenshot shows that there are two empty lines at the end of
-    the buffer. The tiny horizontal dashes at the bottom of the left
-    fringe are non-existent lines. The first of these tiny dashes mark
-    the end of the buffer. Note: This is similar to how Vim displays
-    the tilde symbol (`~`) to show non-existent lines. The empty lines
-    at the end of a buffer can be removed with the key sequence `M-x
-    delete-trailing-whitespace RET`.
+    The screenshot shows that there are two blank lines just before
+    the end of the buffer. The tiny horizontal dashes on the left
+    fringe mark the end of the buffer. Note: This is similar to how
+    Vim displays the tilde symbol (`~`) to show the end of the buffer.
+    The trailing blank lines at the end of a buffer can be removed
+    with the key sequence `M-x delete-trailing-whitespace RET`.
 
   - Show buffer boundaries in the left fringe:
 
@@ -1263,6 +1262,28 @@ Emacs packages we need:
     Note that this line of code must occur before the
     `package-install` call.
 
+  - Emacs does not load the custom-file automatically, so we add the
+    following code to load it:
+
+    ```elisp
+    (load custom-file t)
+    ```
+
+    It is important to load the custom-file because it may contain
+    customizations we have written to it directly or via the customize
+    interface (say, using `M-x customize RET`). If we don't load this
+    file, then any customizations written to this file will not become
+    available in our Emacs environment.
+
+    The boolean argument `t` ensures that no error occurs when the
+    custom-file is missing. Without it, when Emacs starts for the
+    first time with our initialization file and there is no
+    custom-file yet, the following error occurs: `File is missing:
+    Cannot open load file, No such file or directory,
+    ~/.emacs.d/custom.el`. Setting the second argument to `t` prevents
+    this error when Emacs is run with our initialization file for the
+    first time.
+
   - This is necessary for defining the `package-archives` list we will
     use in the next point.
 
@@ -1492,11 +1513,9 @@ In this section we will see how to make our own custom command.
 
     ```elisp
     (defun show-current-time ()
-      "Show current time for 2 seconds."
+      "Show current time."
       (interactive)
-      (message (current-time-string))
-      (sleep-for 2)
-      (message nil))
+      (message (current-time-string)))
     ```
 
     This command can be invoked by typing `M-x show-current-time RET`.

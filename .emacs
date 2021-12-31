@@ -57,7 +57,8 @@
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 ;; Write customizations to a separate file instead of this file.
-(setq custom-file (concat user-emacs-directory "custom.el"))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file t)
 
 ;; Enable installation of packages from MELPA.
 (require 'package)
@@ -167,11 +168,9 @@
 
 ;; Custom command.
 (defun show-current-time ()
-  "Show current time for 2 seconds."
+  "Show current time."
   (interactive)
-  (message (current-time-string))
-  (sleep-for 2)
-  (message nil))
+  (message (current-time-string)))
 
 ;; Custom key-binding.
 (global-set-key (kbd "C-c t") 'show-current-time)
