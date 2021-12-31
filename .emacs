@@ -101,6 +101,24 @@
 ;; yasnippet-snippets.el: A huge collection of useful snippets.
 (use-package yasnippet-snippets)
 
+;; projectile.el: A _bunch_ of utility functionality for working with projects, e.g. rename everywhere
+;; in a projet.
+;; It'll automatically detect if something is a project using different heuristics, e.g.
+;; if you have a `.git` file in a parent directory.
+(use-package projectile
+  :diminish projectile-mode ;; hide from mode-line since it'll be activated everywhere
+  :config
+  (progn
+    (setq projectile-keymap-prefix (kbd "C-c p"))
+    (setq projectile-completion-system 'default)
+    (setq projectile-enable-caching t)
+    (setq projectile-indexing-method 'alien)
+    (add-to-list 'projectile-globally-ignored-files "node-modules")
+    (projectile-global-mode)))
+
+;; helm-projectile.el: Improves interaction between `helm.el` and `projetile.el`.
+(use-package helm-projectile)
+
 ;;;;;; Programming/markup related ;;;;;;
 ;; magit: Objectively the best interface for working with Git-related stuff ever.
 (use-package magit)
