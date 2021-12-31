@@ -119,6 +119,17 @@
 ;; helm-projectile.el: Improves interaction between `helm.el` and `projetile.el`.
 (use-package helm-projectile)
 
+;;;; Navigation
+;; avy.el: Allows you to jump to words by specifying the first character.
+(use-package avy
+  ;; Feel free to change the binding.
+  :bind ("M-j" . avy-goto-word-or-subword-1))
+
+;; ace-window.el: Allows you to jump between windows. Super-useful when you're using more than 2 windows.
+(use-package ace-window
+  ;; Feel free to change the binding.
+  :bind ("M-[" . ace-window))
+
 ;;;;;; Programming/markup related ;;;;;;
 ;; magit: Objectively the best interface for working with Git-related stuff ever.
 (use-package magit)
