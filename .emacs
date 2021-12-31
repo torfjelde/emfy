@@ -178,7 +178,10 @@
   ;; i.e. whenever `python-mode` is called, `elpy-enable` will be called just before it.
   :init (advice-add 'python-mode :before 'elpy-enable))
 
-;; ;; Jupyter
+;; Jupyter
+;; This is awesome _but_ requires an Emacs version built with dynamic modules.
+;; See https://github.com/nnicandro/emacs-zmq for more information on this.
+;; But if this has been done, then you cna uncomment the line below.
 ;; (use-package jupyter)
 
 ;; Enable Rainbow Delimiters.
