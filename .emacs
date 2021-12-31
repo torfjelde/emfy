@@ -101,11 +101,32 @@
     (add-hook 'prog-mode-hook 'company-mode))
   )
 
+;; yasnippet.el: Snippet engine.
+(use-package yasnippet
+  ;; Enable globally.
+  :init (yas-global-mode))
+;; yasnippet-snippets.el: A huge collection of useful snippets.
+(use-package yasnippet-snippets)
+
 ;;;;;; Programming/markup related ;;;;;;
 ;; magit: Objectively the best interface for working with Git-related stuff ever.
 (use-package magit)
 
-;; Markdown
+;;;; LaTex
+;; auctex.el: Everything related to LaTeX.
+(use-package tex
+  ;; It's weird. auctex.el provides a "module" called `tex` rather than `auctex`.
+  ;; https://emacs.stackexchange.com/questions/41321/when-to-specify-a-package-name-in-use-packages-ensure-tag/41324#41324
+  :ensure auctex)
+
+;; company-auctex.el: `company.el` frontend for `auctex.el`.
+(use-package company-auctex
+  :init (progn
+          (company-auctex-init)
+          ;; Enable `company-mode` when we enable `LaTeX-mode`.
+          (add-hook 'LaTeX-mode-hook 'company-mode)))
+
+;;;; Markdown
 ;; markdown-mode: Standard mode for markdown.
 (use-package markdown-mode)
 
@@ -128,6 +149,7 @@
   :config (progn
             (define-key edit-indirect-mode-map (kbd "C-c C-c") nil)))
 
+;;;; Programming languages
 ;; Julia
 (use-package julia-mode)
 
