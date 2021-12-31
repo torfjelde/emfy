@@ -107,9 +107,9 @@
 ;; if you have a `.git` file in a parent directory.
 (use-package projectile
   :diminish projectile-mode ;; hide from mode-line since it'll be activated everywhere
+  :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (progn
-    (setq projectile-keymap-prefix (kbd "C-c p"))
     (setq projectile-completion-system 'default)
     (setq projectile-enable-caching t)
     (setq projectile-indexing-method 'alien)
