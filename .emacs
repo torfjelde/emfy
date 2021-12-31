@@ -66,17 +66,86 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-;; Install packages.
-(dolist (package '(markdown-mode paredit rainbow-delimiters))
-  (unless (package-installed-p package)
-    (package-install package)))
+;; Install `use-package`, if necessary.
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-;; Enable Paredit.
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-(add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode)
-(add-hook 'ielm-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-(add-hook 'lisp-mode-hook 'enable-paredit-mode)
+;; Load and set up `use-package`.
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;;;; Packages ;;;;
+;;;;;;; General utility ;;;;;;;
+;; helm.el: Provides a much more pleasant `M-x` experience. Alternative to `ido`.
+(use-package helm
+             :diminish helm-mode  ;; removes the helm-mode from the mode-line
+             :init (progn
+                     (require 'helm-config)
+                     (helm-mode))
+             :bind (("M-x" . helm-M-x)))
+
+(use-package helm-descbinds
+  :bind (("C-h b" . helm-descbinds)))
+
+;; which-key.el: Provides suggestions/completions for keybindings upon use.
+(use-package which-key
+  :pin melpa
+  :config (which-key-mode))
+
+;; company.el: Autocomplete backend. Other packages implement frontends for this,
+;; e.g. auto-completer for Python.
+(use-package company
+  :config
+  (progn
+    (add-hook 'prog-mode-hook 'company-mode))
+  )
+
+;;;;;; Programming/markup related ;;;;;;
+;; magit: Objectively the best interface for working with Git-related stuff ever.
+(use-package magit)
+
+;; Markdown
+;; markdown-mode: Standard mode for markdown.
+(use-package markdown-mode)
+
+;; polymode: Allows you to use multiple modes within a single buffer, e.g.
+;; use `julia-mode` for highlighting, etc. in a code-block within a markdown file.
+(use-package polymode)
+
+;; poly-markdown: Implementation of `polymode` for markdown, allowing other modes
+;; to be used within buffers with `markdown-mode` enabled.
+(use-package poly-markdown
+  :mode ("\\.[jJ]md" . poly-markdown-mode) ;; Also enable for .jmd files.
+  :bind (:map poly-markdown-mode-map
+              ("C-c '" . markdown-edit-code-block)))
+
+;; edit-indirect: Allows one to parts/subsections of buffers in a separate editable buffer,
+;; whose changes are reflected in the main document. This is used by `poly-markdown` to allow
+;; opening code-blocks in a separate editable buffer (see the `markdown-edit-code-block` from
+;; the above `poly-markdown` block).
+(use-package edit-indirect
+  :config (progn
+            (define-key edit-indirect-mode-map (kbd "C-c C-c") nil)))
+
+;; Julia
+(use-package julia-mode)
+
+;; Python
+(use-package python
+  :config
+  (progn
+    ;; Make it so that `elpy-mode` is also enabled whenever `python-mode` is.
+    (add-hook 'python-mode-hook 'elpy-mode)
+    ))
+(use-package elpy
+  :defer t
+  ;; `advice-add` effecftively allows you insert code before/after the execution of
+  ;; some other functions. In this case we insert `(elpy-enable)` "before" `python-mode`,
+  ;; i.e. whenever `python-mode` is called, `elpy-enable` will be called just before it.
+  :init (advice-add 'python-mode :before 'elpy-enable))
+
+;; ;; Jupyter
+;; (use-package jupyter)
 
 ;; Enable Rainbow Delimiters.
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
