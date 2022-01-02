@@ -45,6 +45,10 @@
 ;; Disable lockfiles.
 (setq create-lockfiles nil)
 
+;; Move the point to bottom/top when using `C-v' and `M-v', respectively,
+;; rather than just trying to scroll.
+(setq scroll-error-top-bottom t)
+
 ;; Workaround for https://debbugs.gnu.org/34341 in GNU Emacs <= 26.3.
 (when (and (version< emacs-version "26.3") (>= libgnutls-version 30603))
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
