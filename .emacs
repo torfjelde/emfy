@@ -195,6 +195,20 @@
 ;; magit: Objectively the best interface for working with Git-related stuff ever.
 (use-package magit)
 
+;; Provides highlighting for TODO, FIXME and BUG in comments.
+(use-package fic-mode
+  :config
+  (progn
+    (add-hook 'prog-mode-hook #'fic-mode)
+    ;; Change the font
+    (set-face-attribute 'fic-face nil
+                        :foreground "magenta"
+                        :background "transparent"
+                        :weight 'bold
+                        :slant 'normal)
+    (add-to-list 'fic-highlighted-words "HACK")
+    (add-to-list 'fic-highlighted-words "NOTE")))
+
 ;;;; LaTex
 ;; auctex.el: Everything related to LaTeX.
 (use-package tex
