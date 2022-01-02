@@ -130,9 +130,12 @@
   :bind ("M-j" . avy-goto-word-or-subword-1))
 
 ;; ace-window.el: Allows you to jump between windows. Super-useful when you're using more than 2 windows.
-(use-package ace-window
+;; HACK: Only load if we're using a GUI. For some reason `ace-window' making it so that
+;; switching between windows inserts 'I's and 'O's.
+(when (display-graphic-p)
+  (use-package ace-window
   ;; Feel free to change the binding.
-  :bind ("M-[" . ace-window))
+  :bind ("M-[" . ace-window)))
 
 ;;;;;; Programming/markup related ;;;;;;
 ;; magit: Objectively the best interface for working with Git-related stuff ever.
