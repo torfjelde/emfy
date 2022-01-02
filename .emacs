@@ -123,6 +123,50 @@
 ;; helm-projectile.el: Improves interaction between `helm.el` and `projetile.el`.
 (use-package helm-projectile)
 
+;;;; Note-taking
+(use-package org
+  ;; Ignore org-mode from upstream and use a manually installed version.
+  :pin manual
+  :config
+  (progn
+    ;; Don't query us every time we trying to evaluate code in buffers.
+    (setq org-confirm-babel-evaluate nil)
+    ;; Don't indent text in a section to align with section-level.
+    (setq org-adapt-indentation nil)
+    ;; Don't indent body of code-blocks at all.
+    (setq org-edit-src-content-indentation 0)
+    ;; Allow setting variables in setup-files.
+    (setq org-export-allow-bind-keywords t)
+    ;; Where to store the generated images from `org-latex-preivew'. This '/' at the end is VERY important.
+    (setq org-preview-latex-image-directory "~/.ltximg/")
+    ;; Make it so that the src block is opened in the current window when we open to edit.
+    (setq org-src-window-setup 'current-window)
+    ;; Necessary for header-arguments in src-blocks to take effect during export.
+    (setq org-export-use-babel t)
+    ;; Disable execution of code-blocks on export by default.
+    (add-to-list 'org-babel-default-header-args '(:eval . "never-export"))
+
+    ;; If `flycheck` is installed, disable `flycheck` in src-blocks.
+    ;; NOTE: This is maybe a bit "harsh". Could potentially just disable certain
+    ;; features of `flycheck`.
+    (when (package-installed-p 'flycheck)
+      (require 'flycheck)
+      (defun disable-flycheck-in-org-src-block ()
+        (flycheck-mode -1))
+      (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block))
+
+    ;; Specify which programming languages to support in code-blocks.
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp t)
+       (shell . t)
+       (C . t)
+       (latex . t)
+       (python . t)
+       (julia . t)))
+    )
+  )
+
 ;;;; Navigation
 ;; avy.el: Allows you to jump to words by specifying the first character.
 (use-package avy
