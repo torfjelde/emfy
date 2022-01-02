@@ -123,6 +123,13 @@
 ;; helm-projectile.el: Improves interaction between `helm.el` and `projetile.el`.
 (use-package helm-projectile)
 
+;; smartparens.el: Automatic insertion of pairs of characters.
+(use-package smartparens
+  :config (progn
+            (require 'smartparens-config)
+            (add-hook 'prog-mode-hook 'turn-on-smartparens-mode)
+            (add-hook 'prog-mode-hook 'show-paren-mode t)))
+
 ;;;; Note-taking
 (use-package org
   ;; Ignore org-mode from upstream and use a manually installed version.
@@ -154,6 +161,9 @@
       (defun disable-flycheck-in-org-src-block ()
         (flycheck-mode -1))
       (add-hook 'org-src-mode-hook 'disable-flycheck-in-org-src-block))
+
+    ;; Use smartparens.
+    (add-hook 'org-mode-hook 'turn-on-smartparens-mode)
 
     ;; Specify which programming languages to support in code-blocks.
     (org-babel-do-load-languages
@@ -201,7 +211,11 @@
 
 ;;;; Markdown
 ;; markdown-mode: Standard mode for markdown.
-(use-package markdown-mode)
+(use-package markdown-mode
+  :config (progn
+            ;; `visual-line-mode` adds word-wrap, etc.
+            (add-hook 'markdown-mode-hook 'visual-line-mode)
+            (add-hook 'markdown-mode-hook 'turn-on-smartparens-mode)))
 
 ;; polymode: Allows you to use multiple modes within a single buffer, e.g.
 ;; use `julia-mode` for highlighting, etc. in a code-block within a markdown file.
